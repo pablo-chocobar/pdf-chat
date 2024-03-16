@@ -3,16 +3,22 @@ from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
 from rag import RAG
+import RSA
+import json
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 rag_pipe = RAG()
 
+key_pair = RSA.generate_RSA_key_pair()
+public_key, private_key = key_pair["public_key"] , key_pair["private_key"]
+
 
 @app.route("/")
 def home():
     return "Wrong route bro lol"
+
 
 @app.route("/api/upload", methods=["POST"])
 @cross_origin()
@@ -37,19 +43,34 @@ def upload():
             return {"upload_status": "unk"}
 
 
+@app.route("/bot/getkey" , methods = ["GET"])
+def get_key():
+    if request.method == "GET":
+        global public_key
+        return {"botkey" : public_key}
+
 @app.route("/bot/ask" , methods = ["POST"])
 def ask_bot():
     if request.method == "POST":
-        req = request.form.get("question" , "lol")
+        question = request.form.get("question" , "lol")
+        userkey = request.form.get("userkey" , "lol")
 
-        if req != "lol":
+        if question != "lol" and userkey != "lol":
+            global key_pair , public_key , private_key
             reply = "hiii!"
 
-            print(req , type(req))
+            question = json.loads(question)
+            temp_userkey = json.loads(userkey)
+            userkey = [temp_userkey["e"] , temp_userkey["n"]]
+            question = RSA.decrypt_RSA(question , private_key)
+            reply = rag_pipe.ask(question)
 
-            reply = rag_pipe.ask(req)
+            key_pair = RSA.generate_RSA_key_pair()
+            public_key, private_key = key_pair["public_key"] , key_pair["private_key"]
 
-            return {"reply_status" : "success" , "answer" : reply}
+            reply = RSA.encrypt_RSA(reply , userkey)
+
+            return {"reply_status" : "success" , "answer" : reply , "botkey" : public_key}
         else:
             return {"reply_status" : "failed"}
         
