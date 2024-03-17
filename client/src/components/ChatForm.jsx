@@ -162,12 +162,9 @@ function ChatForm() {
     } , [messages])
 
     return (
-        <div>
-            <div className='h-96'>
-                <ChatContainer messages = {messages} msgendref = {messagesEndRef}/>
+        <div className='h-full justify-between flex flex-col'>
+            <ChatContainer messages = {messages} msgendref = {messagesEndRef}/>
             <ChatInput inputref = {inputRef} onchange={handleInputChange} onsubmit={handleInputSubmit}/>
-            </div>
-
         </div>
     )
 }

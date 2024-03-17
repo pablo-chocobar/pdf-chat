@@ -3,13 +3,26 @@
 @tailwind utilities;
 
 @layer utilities {
-    /* Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
 
     .no-scrollbar {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none; 
     }
+}
+
+@layer base {
+  :root {
+    --color-primary: 249 245 215;
+    --color-content: 40 36 37;
+    --color-secondary: 164 203 180;
+  }
+
+  :root[data-theme="dark"] {
+      --color-primary: 40 36 37;
+      --color-content: 249 245 215;
+      --color-secondary: 49 48 77;
+  }
 }

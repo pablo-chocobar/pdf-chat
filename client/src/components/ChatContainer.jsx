@@ -3,7 +3,7 @@ import ChatBubble from './ChatBubble'
 
 function ChatContainer(props) {
     return (
-        <div className='h-96 overflow-auto no-scrollbar'>
+        <div className='h-[90%] overflow-auto no-scrollbar'>
             {props.messages.map(function (message, index) {
                 return (
                     <div key={index} className='grid grid-rows-1'>

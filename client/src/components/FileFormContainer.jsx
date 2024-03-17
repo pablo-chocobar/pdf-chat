@@ -1,17 +1,13 @@
 import { useState } from "react";
 import FileUpload from "./FileUpload";
-import SubmitButton from './SubmitButton'
 import UploadStatus from "./UploadStatus";
 
-function FileFormContainer() {
+function FileFormContainer(props) {
 
     const [fileName, setFileName] = useState(null);
     const [PDFile, setPDFile] = useState(null);
-    const [createObjectURL, setCreateObjectURL] = useState(null);
-    const [hideInput, setHideInput] = useState(false);
     const [uploadStatus, setUploadStatus] = useState(null);
-
-
+    const [hideUpload , setHideUpload] = useState(false)
 
     const uploadToClient = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -19,7 +15,6 @@ function FileFormContainer() {
             const i = event.target.files[0];
             setFileName(event.target.files[0].name)
             setPDFile(i);
-            setCreateObjectURL(URL.createObjectURL(i));
         };
     }
 
@@ -34,7 +29,8 @@ function FileFormContainer() {
         }
 
         setUploadStatus('uploading');
-        setHideInput(true);
+        // props.setHideInput(true);
+        setHideUpload(true);
 
         const formData = new FormData()
 
@@ -50,7 +46,8 @@ function FileFormContainer() {
             console.log(data);
 
             if (data['upload_status'] === 'success') {
-                setHideInput(true);
+                props.setHideInput(true);
+                setHideUpload(true);
                 setUploadStatus('success');
             } else {
                 setUploadStatus(null);
@@ -59,24 +56,18 @@ function FileFormContainer() {
             console.error('Error:', error);
             setUploadStatus(null);
         }
-
-        //todo handle submit
     }
 
     return (
         <>
-            <form onSubmit={handleSubmit} >
+            <form onSubmit={handleSubmit} className="h-full flex flex-col justify-center">
                 <div className="flex flex-row justify-center">
-
-                    {!hideInput && <FileUpload onchange={uploadToClient} hide={!hideInput} />}
-                    {hideInput && <UploadStatus status={uploadStatus} filename = {fileName} />}
-
+                    {!hideUpload && <FileUpload onchange={uploadToClient} hide={!props.hideInput} />}
+                    {hideUpload && <UploadStatus status={uploadStatus} filename = {fileName} />}
                 </div>
             </form>
         </>
     )
-
-
 }
 
 export default FileFormContainer;
