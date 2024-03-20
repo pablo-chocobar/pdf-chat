@@ -13,7 +13,7 @@ class RAG():
         self.text_splitter = CharacterTextSplitter(chunk_size=128, chunk_overlap=20)
         self.miniLM = "sentence-transformers/all-MiniLM-L6-v2"
         self.embeddings = HuggingFaceEmbeddings(model_name= self.miniLM)
-        self.model_name = "google/flan-t5-small"
+        self.model_name = "facebook/blenderbot_small-90M"
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, padding=True, truncation=True, max_length=512 , return_token_type_ids=False)
 
@@ -25,7 +25,7 @@ class RAG():
 
         self.llm = HuggingFacePipeline(
             pipeline=self.question_answerer,
-            model_kwargs={"temperature": 0.7, "max_length": 512 , 'return_full_text':False},
+            model_kwargs={"temperature": 0.3, "max_length": 512 , 'return_full_text':False},
         )
 
         

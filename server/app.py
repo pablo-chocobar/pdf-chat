@@ -63,6 +63,8 @@ def ask_bot():
             temp_userkey = json.loads(userkey)
             userkey = [temp_userkey["e"] , temp_userkey["n"]]
             question = RSA.decrypt_RSA(question , private_key)
+
+            print(question)
             reply = rag_pipe.ask(question)
 
             key_pair = RSA.generate_RSA_key_pair()
